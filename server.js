@@ -9,11 +9,18 @@ const app = require("./app");
 const dotenv = require("dotenv");
 const { connectMongoDb } = require("./database");
 dotenv.config({ path: "./Config/config.env" });
+const cloudinary = require("cloudinary");
 const PORT = process.env.PORT || 5700;
 
 
 
 connectMongoDb();
+// Return "https" URLs by setting secure: true
+cloudinary.config({
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.CLOUD_API_KEY,
+  api_secret: process.env.CLOUD_API_SECRET
+});
 
 const server = app.listen(PORT, () => {
    console.log("Server Listening on " + PORT);
@@ -23,7 +30,7 @@ const server = app.listen(PORT, () => {
 
  
 process.on("unhandledRejection", (err) => {
-   console.log("Shutting down the server due to Unhandled Rejection 🔥");
+   console.log("Shutting  down the server due to Unhandled Rejection 🔥");
    console.log(err)
  
    server.close(() => {

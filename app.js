@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const userRouter =  require('./Routes/user.js');
 const authRouter =  require('./Routes/auth.js');
+const resumeRouter =  require('./Routes/resume.js');
 const { jsonResponce } = require('./Utils/responce.js');
 const NewErrorHandler = require('./Utils/NewErrorHandler');
 const { ErrorController } = require('./Controllers/ErrorController.js');
@@ -18,14 +19,18 @@ const limiter = rateLimit({
     message : 'Too many request from the same IP please try in an hour',
 })
 const corsOptions = {
-    // origin: ['http://example.com', 'your Frontend URLS'],
+    origin: ['http://localhost:3000'],
+    credentials: true,
+  
     // optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
   }
 app.use(cors(corsOptions))
 app.use(helmet())
 app.use(cookieParser());
 app.use(limiter)
-app.use(express.json());
+app.use(express.json({
+  limit:'10mb'
+}));
 app.use(mongoSanitize())
 app.use(xss());
 
@@ -38,6 +43,7 @@ app.use(xss());
 app.use(hpp());
 app.use(userRouter);
 app.use(authRouter);
+app.use(resumeRouter);
 app.all('*', (req, res , next)=>next(new NewErrorHandler('Route Not Found' , 404)))
 app.use(ErrorController)
 

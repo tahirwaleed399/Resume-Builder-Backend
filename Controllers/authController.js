@@ -60,6 +60,7 @@ exports.signIn = catchAsyncErrors(async (req, res, next) => {
     return next(new NewErrorHandler("Please Enter Email Or Password"), 401);
   }
   const user = await User.findOne({ email }).select("+password");
+  
   if (!user) return next(new NewErrorHandler("User Not Found"), 404);
   if (!(await user.comparePasswords(password, user.password)))
     return next(new NewErrorHandler("Incorrect Email Or Password"), 401);
