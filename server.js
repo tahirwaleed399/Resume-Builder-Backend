@@ -11,10 +11,10 @@ const { connectMongoDb } = require("./database");
 dotenv.config({ path: "./Config/config.env" });
 const cloudinary = require("cloudinary");
 const PORT = process.env.PORT || 5700;
+let server;
 
 
-
-connectMongoDb();
+connectMongoDb(startServer);
 // Return "https" URLs by setting secure: true
 cloudinary.config({
   cloud_name: process.env.CLOUD_NAME,
@@ -22,10 +22,12 @@ cloudinary.config({
   api_secret: process.env.CLOUD_API_SECRET
 });
 
-const server = app.listen(PORT, () => {
-   console.log("Server Listening on " + PORT);
- });
-
+function startServer(){
+   server = app.listen(PORT, () => {
+    console.log("Server Listening on " + PORT);
+  });
+ 
+}
 
 
  
